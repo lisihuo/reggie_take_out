@@ -2,22 +2,25 @@ package com.liyi.reggie.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.liyi.reggie.common.Result;
 import com.liyi.reggie.entity.Employee;
+import com.liyi.reggie.mapper.EmployeeMapper;
 import com.liyi.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
-
+/**
+ * 员工管理
+ */
 @Slf4j
 @RestController
 @RequestMapping("/employee")
@@ -26,6 +29,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private EmployeeMapper employeeMapper;
 
     @PostMapping("/login")
     public Result<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
@@ -99,5 +105,61 @@ public class EmployeeController {
         employeeService.save(employee);
 
         return Result.success("新增员工成功");
+    }
+
+
+    /**
+     * 显示员工信息列表
+     */
+    @GetMapping("/page")
+    public Result<Page> page(int page, int pageSize, String name) {
+
+        //构造分页构造器
+        Page pageInfo = new Page(page, pageSize);
+
+        //构造查询条件构造器
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(name), Employee::getUsername, name);
+
+        //结果排序
+        queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+        employeeService.page(pageInfo, queryWrapper);
+
+        return Result.success(pageInfo);
+    }
+
+
+    /**
+     * 修改员工状态
+     *
+     * @param request
+     * @param employee
+     * @return
+     */
+    @PutMapping
+    public Result<String> update(HttpServletRequest request, @RequestBody Employee employee) {
+
+        Long empId = (Long) request.getSession().getAttribute("employee");
+        employee.setUpdateUser(empId);
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeService.updateById(employee);
+
+        return Result.success("员工状态修改成功");
+    }
+
+
+    /**
+     * 根据url传值的id，查询员工信息，回显到页面
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    public Result<Employee> edit(@PathVariable Long id) {
+
+        Employee employee = employeeMapper.selectById(id);
+
+        return Result.success(employee);
     }
 }

@@ -7,6 +7,10 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ *
+ * 员工表
+ */
 @Data
 public class Employee implements Serializable {
 
