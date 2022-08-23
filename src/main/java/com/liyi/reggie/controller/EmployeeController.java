@@ -1,11 +1,12 @@
 package com.liyi.reggie.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.liyi.reggie.common.Result;
 import com.liyi.reggie.entity.Employee;
-import com.liyi.reggie.mapper.EmployeeMapper;
-import com.liyi.reggie.utils.MybatisUtils;
+import com.liyi.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +21,13 @@ import java.util.List;
 @RequestMapping("/employee")
 public class EmployeeController {
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @PostMapping("/login")
     public Result<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
 
-        SqlSession sqlSession = MybatisUtils.getSqlSession();
-        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
-        Employee emp = employeeMapper.queryEmployeeByUserName(employee.getUsername());
-
+        Employee emp = employeeService.queryEmployeeByUserName(employee.getUsername());
 
         //将前端传给的密码进行MD5编码
         String password = employee.getPassword();
@@ -51,8 +52,6 @@ public class EmployeeController {
         //创建session
         HttpSession session = request.getSession();
         session.setAttribute("employee", emp.getId());
-
-        sqlSession.close();
 
         return Result.success(emp);
 
@@ -81,18 +80,26 @@ public class EmployeeController {
      */
     @PostMapping
     public Result<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("request:{},employee:{}",request,employee);
 
-       return null;
+        employeeService.save(request,employee);
+        return Result.success("新增员工成功");
     }
 
-
+    /**
+     * 分页查询员工信息
+     * @param page
+     * @param pageSize
+     * @param username
+     * @return
+     */
     @GetMapping("/page")
-    public Result<List<Employee>> page(int page, int pageSize) {
-        log.info("page:{},pageSize:{}",page,pageSize);
+    public Result<PageInfo<Employee>> page(int page, int pageSize,String username ) {
+        log.info("page:{},pageSize:{},userName:{}",page,pageSize,username);
 
-        SqlSession sqlSession = MybatisUtils.getSqlSession();
-        EmployeeMapper employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
-        List<Employee> list = employeeMapper.queryEmployeeByLimit(page,pageSize);
-        return Result.success(list);
+        PageHelper.startPage(page, pageSize);
+        List<Employee> employees = employeeService.queryEmployeeByLimit(page, pageSize,username);
+        PageInfo<Employee> pageInfo = new PageInfo<>(employees);
+        return Result.success(pageInfo);
     }
 }

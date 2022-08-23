@@ -1,6 +1,7 @@
 package com.liyi.reggie.entity;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,8 +31,10 @@ public class Employee implements Serializable {
 
     private Integer status;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     private LocalDateTime createTime;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:dd")
     private LocalDateTime updateTime;
 
     private Long createUser;
