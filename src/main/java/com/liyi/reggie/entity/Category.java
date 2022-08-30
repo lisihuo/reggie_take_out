@@ -23,12 +23,12 @@ public class Category implements Serializable {
 
     private int sort;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Long createUser;
 
     private Long updateUser;

@@ -24,8 +24,15 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * 登录页面，以后需要使用spring security
+     * @param request
+     * @param employee
+     * @return
+     */
     @PostMapping("/login")
     public Result<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("request:{},employee:{}",request,employee);
 
         Employee emp = employeeService.queryEmployeeByUserName(employee.getUsername());
 
