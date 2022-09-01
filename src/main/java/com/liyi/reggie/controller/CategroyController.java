@@ -49,10 +49,9 @@ public class CategroyController {
     @PostMapping
     public Result<String> save(HttpServletRequest request, @RequestBody Category category) {
         log.info("category:{}", category);
+        categoryService.addCategoryType(request,category);
 
-        categoryService.addCategory(request,category);
-
-        return null;
+        return Result.success("新增菜品成功");
     }
 
     /**
@@ -64,6 +63,7 @@ public class CategroyController {
     @PutMapping
     public Result<String> modify(HttpServletRequest request, @RequestBody Category category) {
         log.info("category:{}", category);
+        categoryService.updateCategory(request,category);
 
         return null;
     }
@@ -76,9 +76,9 @@ public class CategroyController {
      */
     @DeleteMapping
     public Result<String> delete(Long ids) {
-
         log.info("ids:{}", ids);
+        categoryService.deleteCategory(ids);
 
-        return null;
+        return Result.success("删除菜品信息");
     }
 }
