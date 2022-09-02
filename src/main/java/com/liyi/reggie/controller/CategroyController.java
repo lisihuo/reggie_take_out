@@ -65,7 +65,7 @@ public class CategroyController {
         log.info("category:{}", category);
         categoryService.updateCategory(request,category);
 
-        return null;
+        return Result.success("修改成功");
     }
 
     /**

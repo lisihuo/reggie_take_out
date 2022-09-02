@@ -1,11 +1,9 @@
 package com.liyi.reggie.service;
 
-import com.liyi.reggie.common.Result;
 import com.liyi.reggie.entity.Category;
 import com.liyi.reggie.mapper.CategoryMapper;
 import com.liyi.reggie.utils.SnowFlakeUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
