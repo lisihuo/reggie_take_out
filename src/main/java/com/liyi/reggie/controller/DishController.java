@@ -6,10 +6,7 @@ import com.liyi.reggie.common.Result;
 import com.liyi.reggie.entity.Dish;
 import com.liyi.reggie.service.DishService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,10 +33,24 @@ public class DishController {
         return Result.success(pageInfo);
     }
 
+    /**
+     * 删除菜品
+     * @return
+     */
     @ResponseBody
     @DeleteMapping
-    public Result<String> deleteDish(){
+    public Result<String> deleteDish(Long ids){
+        dishService.deleteDish(ids);
 
         return Result.success("删除成功");
     }
+
+    @ResponseBody
+    @RequestMapping("/list/{type}")
+    public Result<String> modifyDish(@PathVariable int type){
+
+
+        return null;
+    }
+
 }

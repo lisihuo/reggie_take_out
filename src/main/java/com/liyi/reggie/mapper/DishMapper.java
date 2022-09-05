@@ -9,7 +9,12 @@ import java.util.List;
 public interface DishMapper{
 
     /**
+     * 查询菜品信息
+     */
+    List<Dish> queryAllDish(String name);
+
+    /**
      *
      */
-    List<Dish> queryAllDish(String name );
+    void deleteDish(Long ids);
 }

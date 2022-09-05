@@ -23,4 +23,8 @@ public class DishService {
     public List<Dish> queryAllDish( String name) {
        return dishMapper.queryAllDish(name);
     }
+
+    public void deleteDish(Long ids) {
+        dishMapper.deleteDish(ids);
+    }
 }

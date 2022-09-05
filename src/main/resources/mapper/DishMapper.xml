@@ -24,8 +24,12 @@
     <select id="queryAllDish" resultMap="Dish">
         select * from DISH
         <if test="name != null">
-            where name like %#{name}%
+            where name like "%"#{name}"%"
         </if>
     </select>
+
+    <delete id="deleteDish" parameterType="com.liyi.reggie.entity.Dish">
+        delete from DISH where id = #{ids}
+    </delete>
 
 </mapper>
